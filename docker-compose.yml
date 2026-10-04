@@ -1,0 +1,84 @@
+#version: '3.8'
+#
+#services:
+#  # PostgreSQL 16 Database
+#  postgres:
+#    image: postgres:16-alpine
+#    container_name: rentease-postgres
+#    restart: unless-stopped
+#    environment:
+#      POSTGRES_DB: rentease_db
+#      POSTGRES_USER: rentease_user
+#      POSTGRES_PASSWORD: rentease_secret
+#    ports:
+#      - "5433:5432"
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U rentease_user -d rentease_db"]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
+#
+#  # Java Spring Boot 3 Backend
+#  backend:
+#    build:
+#      context: ./backend
+#      dockerfile: Dockerfile
+#    container_name: rentease-backend
+#    restart: unless-stopped
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#    environment:
+#      SPRING_PROFILES_ACTIVE: dev
+#      DB_URL: jdbc:postgresql://postgres:5432/rentease_db
+#      DB_USER: rentease_user
+#      DB_PASSWORD: rentease_secret
+#      JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+#      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:5173
+#    ports:
+#      - "8080:8080"
+#
+#  # React Web Frontend
+#  frontend:
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile
+#    container_name: rentease-frontend
+#    restart: unless-stopped
+#    depends_on:
+#      - backend
+#    ports:
+#      - "3000:80"
+#
+#
+#volumes:
+#  postgres_data:
+#    driver: local
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: rentease-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: rentease_db
+      POSTGRES_USER: rentease_user
+      POSTGRES_PASSWORD: rentease_secret
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rentease_user -d rentease_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

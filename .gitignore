@@ -1,0 +1,8 @@
+@"
+target/
+.idea/
+*.iml
+.env
+.env.*
+*.log
+"@ | Set-Content .gitignore
