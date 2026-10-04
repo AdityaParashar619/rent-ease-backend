@@ -81,15 +81,11 @@ public class AuthService {
         user.setPasswordHash(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setAccountStatus("ACTIVE");
 
+        // Public registration must never grant elevated provider or administrative roles.
         RoleName roleName = RoleName.ROLE_CUSTOMER;
-        if ("PROVIDER".equalsIgnoreCase(signUpRequest.getRole())) {
-            roleName = RoleName.ROLE_PROVIDER;
-        } else if ("BROKER".equalsIgnoreCase(signUpRequest.getRole())) {
-            roleName = RoleName.ROLE_BROKER;
-        }
 
         Role userRole = roleRepository.findByName(roleName)
-            .orElseGet(() -> roleRepository.save(new Role("role_" + UUID.randomUUID().toString().substring(0, 8), RoleName.ROLE_CUSTOMER)));
+            .orElseThrow(() -> new IllegalStateException("Required account role is not configured"));
 
         user.setRoles(Collections.singleton(userRole));
         User savedUser = userRepository.save(user);

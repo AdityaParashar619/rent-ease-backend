@@ -27,6 +27,7 @@ public class CreateListingRequest {
     private String maskedAddress;
 
     private String fullAddress;
+    private String pincode;
 
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be positive")
@@ -45,6 +46,7 @@ public class CreateListingRequest {
 
     private List<String> images;
     private List<String> amenityIds;
+    private List<String> amenityNames;
 
     // Optional category specifics
     private Integer bedrooms;
@@ -58,6 +60,7 @@ public class CreateListingRequest {
     private Integer year;
     private String transmission;
     private String fuelType;
+    private Integer seatingCapacity;
 
     private Integer guestCapacity;
     private String indoorOutdoor;
@@ -121,6 +124,9 @@ public class CreateListingRequest {
         this.fullAddress = fullAddress;
     }
 
+    public String getPincode() { return pincode; }
+    public void setPincode(String pincode) { this.pincode = pincode; }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -176,6 +182,9 @@ public class CreateListingRequest {
     public void setAmenityIds(List<String> amenityIds) {
         this.amenityIds = amenityIds;
     }
+
+    public List<String> getAmenityNames() { return amenityNames; }
+    public void setAmenityNames(List<String> amenityNames) { this.amenityNames = amenityNames; }
 
     public Integer getBedrooms() {
         return bedrooms;
@@ -256,6 +265,9 @@ public class CreateListingRequest {
     public void setFuelType(String fuelType) {
         this.fuelType = fuelType;
     }
+
+    public Integer getSeatingCapacity() { return seatingCapacity; }
+    public void setSeatingCapacity(Integer seatingCapacity) { this.seatingCapacity = seatingCapacity; }
 
     public Integer getGuestCapacity() {
         return guestCapacity;

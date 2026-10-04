@@ -22,6 +22,27 @@ public class ListingSummaryDto {
     private boolean featured;
     private String coverImage;
     private List<String> keyFeatures;
+    private String description;
+    private String listerId;
+    private String listerName;
+    private String status;
+    private List<String> images;
+    private Double latitude;
+    private Double longitude;
+    private Integer bedrooms;
+    private Integer bathrooms;
+    private Integer carpetAreaSqFt;
+    private String furnishingType;
+    private String brand;
+    private String model;
+    private Integer year;
+    private String transmission;
+    private String fuelType;
+    private Integer seatingCapacity;
+    private Integer guestCapacity;
+    private String pincode;
+    private java.time.Instant createdAt;
+    private List<String> amenities;
 
     public ListingSummaryDto() {
     }
@@ -161,4 +182,47 @@ public class ListingSummaryDto {
     public void setKeyFeatures(List<String> keyFeatures) {
         this.keyFeatures = keyFeatures;
     }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getListerId() { return listerId; }
+    public void setListerId(String listerId) { this.listerId = listerId; }
+    public String getListerName() { return listerName; }
+    public void setListerName(String listerName) { this.listerName = listerName; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public List<String> getImages() { return images; }
+    public void setImages(List<String> images) { this.images = images; }
+    public Double getLatitude() { return latitude; }
+    public void setLatitude(Double latitude) { this.latitude = latitude; }
+    public Double getLongitude() { return longitude; }
+    public void setLongitude(Double longitude) { this.longitude = longitude; }
+    public Integer getBedrooms() { return bedrooms; }
+    public void setBedrooms(Integer bedrooms) { this.bedrooms = bedrooms; }
+    public Integer getBathrooms() { return bathrooms; }
+    public void setBathrooms(Integer bathrooms) { this.bathrooms = bathrooms; }
+    public Integer getCarpetAreaSqFt() { return carpetAreaSqFt; }
+    public void setCarpetAreaSqFt(Integer carpetAreaSqFt) { this.carpetAreaSqFt = carpetAreaSqFt; }
+    public String getFurnishingType() { return furnishingType; }
+    public void setFurnishingType(String furnishingType) { this.furnishingType = furnishingType; }
+    public String getBrand() { return brand; }
+    public void setBrand(String brand) { this.brand = brand; }
+    public String getModel() { return model; }
+    public void setModel(String model) { this.model = model; }
+    public Integer getYear() { return year; }
+    public void setYear(Integer year) { this.year = year; }
+    public String getTransmission() { return transmission; }
+    public void setTransmission(String transmission) { this.transmission = transmission; }
+    public String getFuelType() { return fuelType; }
+    public void setFuelType(String fuelType) { this.fuelType = fuelType; }
+    public Integer getSeatingCapacity() { return seatingCapacity; }
+    public void setSeatingCapacity(Integer seatingCapacity) { this.seatingCapacity = seatingCapacity; }
+    public Integer getGuestCapacity() { return guestCapacity; }
+    public void setGuestCapacity(Integer guestCapacity) { this.guestCapacity = guestCapacity; }
+    public String getPincode() { return pincode; }
+    public void setPincode(String pincode) { this.pincode = pincode; }
+    public java.time.Instant getCreatedAt() { return createdAt; }
+    public void setCreatedAt(java.time.Instant createdAt) { this.createdAt = createdAt; }
+    public List<String> getAmenities() { return amenities; }
+    public void setAmenities(List<String> amenities) { this.amenities = amenities; }
 }

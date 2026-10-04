@@ -43,7 +43,7 @@ You can quickly boot PostgreSQL via the project root's docker-compose:
 ```bash
 docker compose up -d postgres
 ```
-Default connection string: `jdbc:postgresql://localhost:5432/rentease_db` (`rentease_user` / `rentease_secret`).
+The development profile connects to `jdbc:postgresql://localhost:5433/rentease_db`. Set `DB_PASSWORD` before starting Postgres; the container password and application connection use that same variable.
 
 ### Step 2: Run the Spring Boot Application
 From the `backend` directory:
@@ -51,26 +51,21 @@ From the `backend` directory:
 cd backend
 mvn clean spring-boot:run
 ```
-Flyway will automatically apply migrations (`V1__init_schema.sql` and `V2__seed_data.sql`).
+Flyway automatically applies the schema and reference-data migrations, including supported city and locality records.
 
 ---
 
 ## 📖 Interactive OpenAPI & Swagger UI
 
 Once started, interactive API documentation is available at:
-- **Swagger UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-- **OpenAPI JSON**: [http://localhost:8080/api-docs](http://localhost:8080/api-docs)
+- **Swagger UI**: [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html)
+- **OpenAPI JSON**: [http://localhost:8081/api-docs](http://localhost:8081/api-docs)
 
 ---
 
-## 🔐 Demo Credentials (Pre-seeded with BCrypt)
+## Account setup
 
-| Role | Email | Password | Access |
-| :--- | :--- | :--- | :--- |
-| **Admin & Compliance** | `admin@rentease.com` | `Password@123` | Full admin desk, verification reviews, dispute resolution |
-| **Direct Owner (Provider)** | `karthik.reddy@gmail.com` | `Password@123` | Listing publication, calendar booking management |
-| **Broker (Provider)** | `ananya.iyer@brokerage.com` | `Password@123` | Commercial & residential lease management |
-| **Customer (Tenant)** | `priya.sharma@gmail.com` | `Password@123` | Search, compare, booking checkout, escrow payments |
+The migrations seed roles and reference data, but do not create demo users. Register a customer/provider account using `/api/v1/auth/register`. Administrative accounts must be provisioned through a trusted operator process; public registration cannot grant admin privileges.
 
 ---
 
@@ -83,8 +78,11 @@ Once started, interactive API documentation is available at:
 ### Inventory & Search
 - `GET /api/v1/listings`: Search & filter across categories (params: `category`, `locality`, `minPrice`, `maxPrice`, `ownerType`, `verifiedOnly`, `keyword`)
 - `GET /api/v1/listings/{id}`: Detailed specifications of a rental
-- `GET /api/v1/listings/featured`: Verified premium featured listings
+- `GET /api/v1/listings/featured`: Active, verified featured listings
 - `POST /api/v1/listings`: Publish a new rental (Provider/Broker only)
+- `GET /api/v1/listings/my`: Current provider's listings
+- `GET /api/v1/admin/listings/pending`: Listings waiting for admin review
+- `POST /api/v1/admin/listings/{id}/review`: Approve or reject a listing
 
 ### Bookings & Concurrency Slot Locking
 - `POST /api/v1/bookings`: Reserve rental with conflict validation (409 Conflict if dates overlap)
@@ -97,9 +95,10 @@ Once started, interactive API documentation is available at:
 
 ---
 
-## 🐳 Docker Production Build
-To spin up both PostgreSQL and the Spring Boot application together:
+## 🐳 Docker database
+The Compose file starts PostgreSQL only. Run the Spring Boot application separately:
 ```bash
-docker compose up --build
+docker compose up -d postgres
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
-The application will be accessible at `http://localhost:8080`.
+The API listens at `http://localhost:8081`. Configure a strong `JWT_SECRET` and `DB_PASSWORD` in the environment before starting the application.

@@ -2,6 +2,8 @@ package com.rentease.controller;
 
 import com.rentease.dto.common.ApiResponse;
 import com.rentease.dto.dashboard.AdminDashboardDto;
+import com.rentease.dto.common.PageResponse;
+import com.rentease.dto.listing.ListingSummaryDto;
 import com.rentease.security.UserPrincipal;
 import com.rentease.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +32,15 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.ok(stats));
     }
 
+    @GetMapping("/listings/pending")
+    @Operation(summary = "List pending rental listings for admin review")
+    public ResponseEntity<ApiResponse<PageResponse<ListingSummaryDto>>> getPendingListings(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "100") int size
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok(adminService.getPendingListings(page, size)));
+    }
+
     @PostMapping("/verifications/{documentId}/review")
     @Operation(summary = "Approve or reject a submitted verification document")
     public ResponseEntity<ApiResponse<String>> reviewVerificationDocument(
@@ -40,5 +51,15 @@ public class AdminController {
     ) {
         adminService.reviewDocument(documentId, approved, notes, adminUser.getId());
         return ResponseEntity.ok(ApiResponse.ok(approved ? "Document approved and verified" : "Document rejected", null));
+    }
+
+    @PostMapping("/listings/{listingId}/review")
+    @Operation(summary = "Approve or reject a pending rental listing")
+    public ResponseEntity<ApiResponse<String>> reviewListing(
+        @PathVariable String listingId,
+        @RequestParam boolean approved
+    ) {
+        adminService.reviewListing(listingId, approved);
+        return ResponseEntity.ok(ApiResponse.ok(approved ? "Listing verified and published" : "Listing rejected", null));
     }
 }

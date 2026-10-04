@@ -23,7 +23,7 @@ public class JwtTokenProvider {
     private final long refreshExpirationMs;
 
     public JwtTokenProvider(
-        @Value("${app.jwt.secret:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}") String secret,
+        @Value("${app.jwt.secret}") String secret,
         @Value("${app.jwt.expiration-ms:86400000}") long jwtExpirationMs,
         @Value("${app.jwt.refresh-expiration-ms:604800000}") long refreshExpirationMs
     ) {

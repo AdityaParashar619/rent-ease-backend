@@ -12,6 +12,9 @@ public class BookingDto {
     private String listingId;
     private String listingTitle;
     private String listingCategory;
+    private String providerId;
+    private String providerName;
+    private String listingImage;
     private LocalDate startDate;
     private LocalDate endDate;
     private String status;
@@ -80,6 +83,13 @@ public class BookingDto {
     public void setListingCategory(String listingCategory) {
         this.listingCategory = listingCategory;
     }
+
+    public String getProviderId() { return providerId; }
+    public void setProviderId(String providerId) { this.providerId = providerId; }
+    public String getProviderName() { return providerName; }
+    public void setProviderName(String providerName) { this.providerName = providerName; }
+    public String getListingImage() { return listingImage; }
+    public void setListingImage(String listingImage) { this.listingImage = listingImage; }
 
     public LocalDate getStartDate() {
         return startDate;

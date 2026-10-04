@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -54,8 +55,10 @@ public class ListingController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Fetch detailed specifications for a specific listing")
-    public ResponseEntity<ApiResponse<ListingSummaryDto>> getListingById(@PathVariable String id) {
-        ListingSummaryDto listing = listingService.getListingById(id);
+    public ResponseEntity<ApiResponse<ListingSummaryDto>> getListingById(
+        @PathVariable String id, @AuthenticationPrincipal UserPrincipal currentUser
+    ) {
+        ListingSummaryDto listing = listingService.getListingById(id, currentUser == null ? null : currentUser.getId());
         return ResponseEntity.ok(ApiResponse.ok(listing));
     }
 
@@ -66,6 +69,27 @@ public class ListingController {
         return ResponseEntity.ok(ApiResponse.ok(featured));
     }
 
+    @GetMapping("/my")
+    @PreAuthorize("hasAnyRole('PROVIDER', 'BROKER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<PageResponse<ListingSummaryDto>>> getMyListings(
+        @AuthenticationPrincipal UserPrincipal currentUser,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "100") int size
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok(listingService.getProviderListings(currentUser.getId(), page, size)));
+    }
+
+    @PatchMapping("/my/{id}/availability")
+    @PreAuthorize("hasAnyRole('PROVIDER', 'BROKER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<ListingSummaryDto>> updateAvailability(
+        @PathVariable String id,
+        @RequestParam boolean available,
+        @AuthenticationPrincipal UserPrincipal currentUser
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok("Listing availability updated",
+            listingService.updateAvailability(id, currentUser.getId(), available)));
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('PROVIDER', 'BROKER', 'ADMIN')")
     @Operation(summary = "Publish a new rental listing (Requires Provider or Broker role)")
@@ -74,6 +98,6 @@ public class ListingController {
         @AuthenticationPrincipal UserPrincipal currentUser
     ) {
         ListingSummaryDto created = listingService.createListing(request, currentUser.getId());
-        return ResponseEntity.ok(ApiResponse.ok("Listing created successfully", created));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Listing submitted for verification", created));
     }
 }

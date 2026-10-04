@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,7 @@ public class BookingController {
         @AuthenticationPrincipal UserPrincipal currentUser
     ) {
         BookingDto booking = bookingService.createBooking(request, currentUser.getId());
-        return ResponseEntity.ok(ApiResponse.ok("Booking confirmed successfully", booking));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Booking request submitted", booking));
     }
 
     @GetMapping("/my")
@@ -45,10 +46,22 @@ public class BookingController {
         return ResponseEntity.ok(ApiResponse.ok(bookings));
     }
 
+    @GetMapping("/provider")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('PROVIDER', 'BROKER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<PageResponse<BookingDto>>> getProviderBookings(
+        @AuthenticationPrincipal UserPrincipal currentUser,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "100") int size
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok(bookingService.getProviderBookings(currentUser.getId(), page, size)));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get specific booking details by ID")
-    public ResponseEntity<ApiResponse<BookingDto>> getBookingById(@PathVariable String id) {
-        BookingDto booking = bookingService.getBookingById(id);
+    public ResponseEntity<ApiResponse<BookingDto>> getBookingById(
+        @PathVariable String id, @AuthenticationPrincipal UserPrincipal currentUser
+    ) {
+        BookingDto booking = bookingService.getBookingById(id, currentUser.getId());
         return ResponseEntity.ok(ApiResponse.ok(booking));
     }
 

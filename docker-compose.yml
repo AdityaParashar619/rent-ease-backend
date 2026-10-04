@@ -66,7 +66,7 @@ services:
     environment:
       POSTGRES_DB: rentease_db
       POSTGRES_USER: rentease_user
-      POSTGRES_PASSWORD: rentease_secret
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in the environment}
 
     ports:
       - "5433:5432"

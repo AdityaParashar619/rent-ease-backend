@@ -76,10 +76,13 @@ public class Listing {
     @Column(name = "full_address")
     private String fullAddress;
 
+    @Column(name = "address_pincode", length = 20)
+    private String addressPincode;
+
     private Double latitude;
     private Double longitude;
 
-    private Double rating = 5.0;
+    private Double rating = 0.0;
 
     @Column(name = "review_count")
     private Integer reviewCount = 0;
@@ -261,6 +264,9 @@ public class Listing {
     public void setFullAddress(String fullAddress) {
         this.fullAddress = fullAddress;
     }
+
+    public String getAddressPincode() { return addressPincode; }
+    public void setAddressPincode(String addressPincode) { this.addressPincode = addressPincode; }
 
     public Double getLatitude() {
         return latitude;
