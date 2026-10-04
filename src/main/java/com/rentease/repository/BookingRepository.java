@@ -1,16 +1,17 @@
 package com.rentease.repository;
 
-import com.rentease.entity.Booking;
-import com.rentease.enums.BookingStatus;
+import java.time.LocalDate;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+
+import com.rentease.entity.Booking;
+import com.rentease.enums.BookingStatus;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, String> {
